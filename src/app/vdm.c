@@ -7,7 +7,7 @@
 * Related Document: See README.md
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -75,12 +75,14 @@ const vdm_info_config_t vdm_info[NO_OF_TYPEC_PORTS] =
         .sVidLength = 0,
         .disModeLength = 0,
     },
+#if PMG1_PD_DUALPORT_ENABLE
     {
         .discId = {0xFF00A041, 0x19C004B4, 0x00000000, 0xF5040000, 0x40000001},
         .dIdLength = 0x18,
         .sVidLength = 0,
         .disModeLength = 0,
     }
+#endif /* PMG1_PD_DUALPORT_ENABLE */
 };
 
 /* Store VDM information from the config table in the RAM variables. */
@@ -222,6 +224,7 @@ void eval_vdm(cy_stc_pdstack_context_t * context, const cy_stc_pdstack_pd_packet
 #if CY_PD_REV3_ENABLE
         /* Use the minimum VDM version from among the partner's revision and the live revision. */
         app_stat->vdm_version = CY_PDUTILS_GET_MIN (app_stat->vdm_version, vdm->dat[CY_PD_VDM_HEADER_IDX].std_vdm_hdr.stVer);
+        app_stat->vdm_minor_version = CY_PDUTILS_GET_MIN (app_stat->vdm_minor_version, vdm->dat[CY_PD_VDM_HEADER_IDX].std_vdm_hdr.stMinVer);
 #endif /* CY_PD_REV3_ENABLE */
 
         /* Set a NAK response by default. */
@@ -330,6 +333,14 @@ void eval_vdm(cy_stc_pdstack_context_t * context, const cy_stc_pdstack_pd_packet
                         break;
                 }
             }
+            if(pd3_live)
+            {
+                if(vdm->dat[CY_PD_VDM_HEADER_IDX].std_vdm_hdr.cmd == CY_PDSTACK_VDM_CMD_ATTENTION)
+                {
+                    /* Ignore Attention VDM */
+                    app_stat->vdmResp.noResp = CY_PDSTACK_VDM_AMS_RESP_NOT_REQ;
+                }
+            }
         }
         else
         {
@@ -350,6 +361,7 @@ void eval_vdm(cy_stc_pdstack_context_t * context, const cy_stc_pdstack_pd_packet
 
         /* Set the VDM version for the response. */
         app_stat->vdmResp.respBuf[CY_PD_VDM_HEADER_IDX].std_vdm_hdr.stVer = app_stat->vdm_version;
+        app_stat->vdmResp.respBuf[CY_PD_VDM_HEADER_IDX].std_vdm_hdr.stMinVer = app_stat->vdm_minor_version;
     }
     else
     {

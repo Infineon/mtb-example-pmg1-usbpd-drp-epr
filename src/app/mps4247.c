@@ -1,12 +1,12 @@
 /******************************************************************************
-* File Name: mps42479.c
+* File Name: mps4247.c
 *
 * Description: This is source code for the MPS EPR power regulator.
 *
 * Related Document: See README.md
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -41,7 +41,6 @@
 
 #include "cy_pdl.h"
 #include "cybsp.h"
-#include "ncp81239.h"
 
 #if MPS_28V_REG_ENABLE
 /* I2C master data rate in Hz */
@@ -56,6 +55,8 @@
 
 #define MPS_VOLT_REG_ADDR                (0x21u)
 #define MPS_MFR_CTRL4_REG_ADDR           (0xD4u)
+
+#define MPS_EXCESS_VOLTAGE               (100u)
 
 static cy_stc_scb_i2c_context_t  i2c_context;
 
@@ -152,6 +153,7 @@ bool set_pd_ctrl_voltage(uint8_t port, uint16_t volt)
 {
     uint8_t wr_buf[3];
     uint8_t status;
+    volt = volt + MPS_EXCESS_VOLTAGE;
 
 #if CY_PD_FRS_RX_ENABLE
     /* If fast role swap is enabled, we need to have a 5V supply read at all times. */

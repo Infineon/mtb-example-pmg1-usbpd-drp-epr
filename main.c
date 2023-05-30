@@ -8,7 +8,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -336,7 +336,9 @@ int main(void)
 
     /* Workaround for pd_ctrl_init () bug. Set to 5 V. */
     APP_VBUS_SET_VOLT_P1(5000);
+#if PMG1_PD_DUALPORT_ENABLE
     APP_VBUS_SET_VOLT_P2(5000);
+#endif /* PMG1_PD_DUALPORT_ENABLE */
 
     /* Initialize the Device Policy Manager. */
     Cy_PdStack_Dpm_Init(&gl_PdStackPort0Ctx,

@@ -8,7 +8,7 @@
 * Related Document: See README.md
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -678,11 +678,13 @@ void app_event_handler(cy_stc_pdstack_context_t *ptrPdStackContext,
             if (ptrPdStackContext->dpmConfig.specRevSopLive >= CY_PD_REV3)
             {
                 app_status[port].vdm_version = CY_PD_STD_VDM_VERSION_REV3;
+                app_status[port].vdm_minor_version = CY_PDSTACK_STD_VDM_MINOR_VER1;
             }
             else
 #endif /* CCG_PD_REV3_ENABLE */
             {
                 app_status[port].vdm_version = CY_PD_STD_VDM_VERSION_REV2;
+                app_status[port].vdm_minor_version = CY_PDSTACK_STD_VDM_MINOR_VER0;
             }
 
             if ((contract_status->status ==CY_PDSTACK_CONTRACT_NEGOTIATION_SUCCESSFUL) ||

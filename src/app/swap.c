@@ -7,7 +7,7 @@
 * Related Document: See README.md
 *
 *******************************************************************************
-* Copyright 2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2022-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -51,17 +51,23 @@
 /* Configure the Swap Responses. Should be REJECT for USBPD Sink-UFP Example */
 volatile uint8_t pr_swap_response[NO_OF_TYPEC_PORTS] = {
     APP_PD_SWAP_RESP_ACCEPT,
+#if PMG1_PD_DUALPORT_ENABLE
     APP_PD_SWAP_RESP_ACCEPT
+#endif /* PMG1_PD_DUALPORT_ENABLE */
 };
 
 volatile uint8_t dr_swap_response[NO_OF_TYPEC_PORTS] = {
     APP_PD_SWAP_RESP_ACCEPT,
+#if PMG1_PD_DUALPORT_ENABLE
     APP_PD_SWAP_RESP_ACCEPT
+#endif /* PMG1_PD_DUALPORT_ENABLE */
 };
 
 volatile uint8_t vconn_swap_response[NO_OF_TYPEC_PORTS] = {
     APP_PD_SWAP_RESP_ACCEPT,
+#if PMG1_PD_DUALPORT_ENABLE
     APP_PD_SWAP_RESP_ACCEPT
+#endif /* PMG1_PD_DUALPORT_ENABLE */
 };
 
 static cy_en_pdstack_app_req_status_t get_response(cy_stc_pdstack_context_t * context, uint8_t raw_resp)
